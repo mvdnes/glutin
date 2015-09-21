@@ -31,6 +31,7 @@ pub struct WindowBuilder<'a> {
 
 impl<'a> WindowBuilder<'a> {
     /// Initializes a new `WindowBuilder` with default values.
+    #[inline]
     pub fn new() -> WindowBuilder<'a> {
         WindowBuilder {
             pf_reqs: Default::default(),
@@ -42,12 +43,14 @@ impl<'a> WindowBuilder<'a> {
     /// Requests the window to be of specific dimensions.
     ///
     /// Width and height are in pixels.
+    #[inline]
     pub fn with_dimensions(mut self, width: u32, height: u32) -> WindowBuilder<'a> {
         self.window.dimensions = Some((width, height));
         self
     }
 
     /// Requests a specific title for the window.
+    #[inline]
     pub fn with_title(mut self, title: String) -> WindowBuilder<'a> {
         self.window.title = title;
         self
@@ -56,6 +59,7 @@ impl<'a> WindowBuilder<'a> {
     /// Requests fullscreen mode.
     ///
     /// If you don't specify dimensions for the window, it will match the monitor's.
+    #[inline]
     pub fn with_fullscreen(mut self, monitor: MonitorID) -> WindowBuilder<'a> {
         let MonitorID(monitor) = monitor;
         self.window.monitor = Some(monitor);
@@ -65,18 +69,21 @@ impl<'a> WindowBuilder<'a> {
     /// The created window will share all its OpenGL objects with the window in the parameter.
     ///
     /// There are some exceptions, like FBOs or VAOs. See the OpenGL documentation.
+    #[inline]
     pub fn with_shared_lists(mut self, other: &'a Window) -> WindowBuilder<'a> {
         self.opengl.sharing = Some(&other.window);
         self
     }
 
     /// Sets how the backend should choose the OpenGL API and version.
+    #[inline]
     pub fn with_gl(mut self, request: GlRequest) -> WindowBuilder<'a> {
         self.opengl.version = request;
         self
     }
 
     /// Sets the desired OpenGL context profile.
+    #[inline]
     pub fn with_gl_profile(mut self, profile: GlProfile) -> WindowBuilder<'a> {
         self.opengl.profile = Some(profile);
         self
@@ -86,24 +93,28 @@ impl<'a> WindowBuilder<'a> {
     ///
     /// The default value for this flag is `cfg!(debug_assertions)`, which means that it's enabled
     /// when you run `cargo build` and disabled when you run `cargo build --release`.
+    #[inline]
     pub fn with_gl_debug_flag(mut self, flag: bool) -> WindowBuilder<'a> {
         self.opengl.debug = flag;
         self
     }
 
     /// Sets the robustness of the OpenGL context. See the docs of `Robustness`.
+    #[inline]
     pub fn with_gl_robustness(mut self, robustness: Robustness) -> WindowBuilder<'a> {
         self.opengl.robustness = robustness;
         self
     }
 
     /// Requests that the window has vsync enabled.
+    #[inline]
     pub fn with_vsync(mut self) -> WindowBuilder<'a> {
         self.opengl.vsync = true;
         self
     }
 
     /// Sets whether the window will be initially hidden or visible.
+    #[inline]
     pub fn with_visibility(mut self, visible: bool) -> WindowBuilder<'a> {
         self.window.visible = visible;
         self
@@ -114,6 +125,7 @@ impl<'a> WindowBuilder<'a> {
     /// # Panic
     ///
     /// Will panic if `samples` is not a power of two.
+    #[inline]
     pub fn with_multisampling(mut self, samples: u16) -> WindowBuilder<'a> {
         assert!(samples.is_power_of_two());
         self.pf_reqs.multisampling = Some(samples);
@@ -121,18 +133,21 @@ impl<'a> WindowBuilder<'a> {
     }
 
     /// Sets the number of bits in the depth buffer.
+    #[inline]
     pub fn with_depth_buffer(mut self, bits: u8) -> WindowBuilder<'a> {
         self.pf_reqs.depth_bits = Some(bits);
         self
     }
 
     /// Sets the number of bits in the stencil buffer.
+    #[inline]
     pub fn with_stencil_buffer(mut self, bits: u8) -> WindowBuilder<'a> {
         self.pf_reqs.stencil_bits = Some(bits);
         self
     }
 
     /// Sets the number of bits in the color buffer.
+    #[inline]
     pub fn with_pixel_format(mut self, color_bits: u8, alpha_bits: u8) -> WindowBuilder<'a> {
         self.pf_reqs.color_bits = Some(color_bits);
         self.pf_reqs.alpha_bits = Some(alpha_bits);
@@ -140,30 +155,35 @@ impl<'a> WindowBuilder<'a> {
     }
 
     /// Request the backend to be stereoscopic.
+    #[inline]
     pub fn with_stereoscopy(mut self) -> WindowBuilder<'a> {
         self.pf_reqs.stereoscopy = true;
         self
     }
 
     /// Sets whether sRGB should be enabled on the window. `None` means "I don't care".
+    #[inline]
     pub fn with_srgb(mut self, srgb_enabled: Option<bool>) -> WindowBuilder<'a> {
         self.pf_reqs.srgb = srgb_enabled;
         self
     }
 
     /// Sets whether the background of the window should be transparent.
+    #[inline]
     pub fn with_transparency(mut self, transparent: bool) -> WindowBuilder<'a> {
         self.window.transparent = transparent;
         self
     }
 
     /// Sets whether the window should have a border, a title bar, etc.
+    #[inline]
     pub fn with_decorations(mut self, decorations: bool) -> WindowBuilder<'a> {
         self.window.decorations = decorations;
         self
     }
 
     /// Enables multitouch
+    #[inline]
     pub fn with_multitouch(mut self) -> WindowBuilder<'a> {
         self.window.multitouch = true;
         self
@@ -193,6 +213,7 @@ impl<'a> WindowBuilder<'a> {
     ///
     /// The context is build in a *strict* way. That means that if the backend couldn't give
     /// you what you requested, an `Err` will be returned.
+    #[inline]
     pub fn build_strict(self) -> Result<Window, CreationError> {
         self.build()
     }
@@ -226,6 +247,7 @@ pub struct Window {
 }
 
 impl Default for Window {
+    #[inline]
     fn default() -> Window {
         Window::new().unwrap()
     }
@@ -433,11 +455,13 @@ impl Window {
     /// - On Windows and OS/X, this always returns `OpenGl`.
     /// - On Android, this always returns `OpenGlEs`.
     /// - On Linux, it must be checked at runtime.
+    #[inline]
     pub fn get_api(&self) -> Api {
         self.window.get_api()
     }
 
     /// Returns the pixel format of this window.
+    #[inline]
     pub fn get_pixel_format(&self) -> PixelFormat {
         self.window.get_pixel_format()
     }
@@ -454,6 +478,7 @@ impl Window {
     /// Sets a resize callback that is called by Mac (and potentially other
     /// operating systems) during resize operations. This can be used to repaint
     /// during window resizing.
+    #[inline]
     pub fn set_window_resize_callback(&mut self, callback: Option<fn(u32, u32)>) {
         self.window.set_window_resize_callback(callback);
     }
@@ -467,11 +492,13 @@ impl Window {
     /// Returns the ratio between the backing framebuffer resolution and the
     /// window size in screen pixels. This is typically one for a normal display
     /// and two for a retina display.
+    #[inline]
     pub fn hidpi_factor(&self) -> f32 {
         self.window.hidpi_factor()
     }
 
     /// Changes the position of the cursor in window coordinates.
+    #[inline]
     pub fn set_cursor_position(&self, x: i32, y: i32) -> Result<(), ()> {
         self.window.set_cursor_position(x, y)
     }
@@ -479,38 +506,46 @@ impl Window {
     /// Sets how glutin handles the cursor. See the documentation of `CursorState` for details.
     ///
     /// Has no effect on Android.
+    #[inline]
     pub fn set_cursor_state(&self, state: CursorState) -> Result<(), String> {
         self.window.set_cursor_state(state)
     }
 }
 
 impl gl_common::GlFunctionsSource for Window {
+    #[inline]
     fn get_proc_addr(&self, addr: &str) -> *const libc::c_void {
         self.get_proc_address(addr)
     }
 }
 
 impl GlContext for Window {
+    #[inline]
     unsafe fn make_current(&self) -> Result<(), ContextError> {
         self.make_current()
     }
 
+    #[inline]
     fn is_current(&self) -> bool {
         self.is_current()
     }
 
+    #[inline]
     fn get_proc_address(&self, addr: &str) -> *const libc::c_void {
         self.get_proc_address(addr)
     }
 
+    #[inline]
     fn swap_buffers(&self) -> Result<(), ContextError> {
         self.swap_buffers()
     }
 
+    #[inline]
     fn get_api(&self) -> Api {
         self.get_api()
     }
 
+    #[inline]
     fn get_pixel_format(&self) -> PixelFormat {
         self.get_pixel_format()
     }
@@ -539,10 +574,12 @@ pub struct PollEventsIterator<'a>(platform::PollEventsIterator<'a>);
 impl<'a> Iterator for PollEventsIterator<'a> {
     type Item = Event;
 
+    #[inline]
     fn next(&mut self) -> Option<Event> {
         self.0.next()
     }
 
+    #[inline]
     fn size_hint(&self) -> (usize, Option<usize>) {
         self.0.size_hint()
     }
@@ -554,10 +591,12 @@ pub struct WaitEventsIterator<'a>(platform::WaitEventsIterator<'a>);
 impl<'a> Iterator for WaitEventsIterator<'a> {
     type Item = Event;
 
+    #[inline]
     fn next(&mut self) -> Option<Event> {
         self.0.next()
     }
 
+    #[inline]
     fn size_hint(&self) -> (usize, Option<usize>) {
         self.0.size_hint()
     }
@@ -573,22 +612,26 @@ pub struct AvailableMonitorsIter {
 impl Iterator for AvailableMonitorsIter {
     type Item = MonitorID;
 
+    #[inline]
     fn next(&mut self) -> Option<MonitorID> {
         self.data.next().map(|id| MonitorID(id))
     }
 
+    #[inline]
     fn size_hint(&self) -> (usize, Option<usize>) {
         self.data.size_hint()
     }
 }
 
 /// Returns the list of all available monitors.
+#[inline]
 pub fn get_available_monitors() -> AvailableMonitorsIter {
     let data = platform::get_available_monitors();
     AvailableMonitorsIter{ data: data.into_iter() }
 }
 
 /// Returns the primary monitor of the system.
+#[inline]
 pub fn get_primary_monitor() -> MonitorID {
     MonitorID(platform::get_primary_monitor())
 }
@@ -598,18 +641,21 @@ pub struct MonitorID(platform::MonitorID);
 
 impl MonitorID {
     /// Returns a human-readable name of the monitor.
+    #[inline]
     pub fn get_name(&self) -> Option<String> {
         let &MonitorID(ref id) = self;
         id.get_name()
     }
 
     /// Returns the native platform identifier for this monitor.
+    #[inline]
     pub fn get_native_identifier(&self) -> NativeMonitorId {
         let &MonitorID(ref id) = self;
         id.get_native_identifier()
     }
 
     /// Returns the number of pixels currently displayed on the monitor.
+    #[inline]
     pub fn get_dimensions(&self) -> (u32, u32) {
         let &MonitorID(ref id) = self;
         id.get_dimensions()

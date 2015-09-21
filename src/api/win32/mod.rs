@@ -67,6 +67,7 @@ enum Context {
 pub struct WindowWrapper(pub winapi::HWND, pub winapi::HDC);
 
 impl Drop for WindowWrapper {
+    #[inline]
     fn drop(&mut self) {
         unsafe {
             user32::DestroyWindow(self.0);
@@ -78,6 +79,7 @@ impl Drop for WindowWrapper {
 pub struct WindowProxy;
 
 impl WindowProxy {
+    #[inline]
     pub fn wakeup_event_loop(&self) {
         unimplemented!()
     }
@@ -111,12 +113,14 @@ impl Window {
         }
     }
 
+    #[inline]
     pub fn show(&self) {
         unsafe {
             user32::ShowWindow(self.window.0, winapi::SW_SHOW);
         }
     }
 
+    #[inline]
     pub fn hide(&self) {
         unsafe {
             user32::ShowWindow(self.window.0, winapi::SW_HIDE);
@@ -150,6 +154,7 @@ impl Window {
     }
 
     /// See the docs in the crate root file.
+    #[inline]
     pub fn get_inner_size(&self) -> Option<(u32, u32)> {
         let mut rect: winapi::RECT = unsafe { mem::uninitialized() };
 
@@ -164,6 +169,7 @@ impl Window {
     }
 
     /// See the docs in the crate root file.
+    #[inline]
     pub fn get_outer_size(&self) -> Option<(u32, u32)> {
         let mut rect: winapi::RECT = unsafe { mem::uninitialized() };
 
@@ -188,11 +194,13 @@ impl Window {
         }
     }
 
+    #[inline]
     pub fn create_window_proxy(&self) -> WindowProxy {
         WindowProxy
     }
 
     /// See the docs in the crate root file.
+    #[inline]
     pub fn poll_events(&self) -> PollEventsIterator {
         PollEventsIterator {
             window: self,
@@ -200,23 +208,28 @@ impl Window {
     }
 
     /// See the docs in the crate root file.
+    #[inline]
     pub fn wait_events(&self) -> WaitEventsIterator {
         WaitEventsIterator {
             window: self,
         }
     }
 
+    #[inline]
     pub fn platform_display(&self) -> *mut libc::c_void {
         unimplemented!()
     }
 
+    #[inline]
     pub fn platform_window(&self) -> *mut libc::c_void {
         self.window.0 as *mut libc::c_void
     }
 
+    #[inline]
     pub fn set_window_resize_callback(&mut self, _: Option<fn(u32, u32)>) {
     }
 
+    #[inline]
     pub fn set_cursor(&self, _cursor: MouseCursor) {
         unimplemented!()
     }
@@ -286,6 +299,7 @@ impl Window {
         res
     }
 
+    #[inline]
     pub fn hidpi_factor(&self) -> f32 {
         1.0
     }
@@ -311,6 +325,7 @@ impl Window {
 }
 
 impl GlContext for Window {
+    #[inline]
     unsafe fn make_current(&self) -> Result<(), ContextError> {
         match self.context {
             Context::Wgl(ref c) => c.make_current(),
@@ -318,6 +333,7 @@ impl GlContext for Window {
         }
     }
 
+    #[inline]
     fn is_current(&self) -> bool {
         match self.context {
             Context::Wgl(ref c) => c.is_current(),
@@ -325,6 +341,7 @@ impl GlContext for Window {
         }
     }
 
+    #[inline]
     fn get_proc_address(&self, addr: &str) -> *const libc::c_void {
         match self.context {
             Context::Wgl(ref c) => c.get_proc_address(addr),
@@ -332,6 +349,7 @@ impl GlContext for Window {
         }
     }
 
+    #[inline]
     fn swap_buffers(&self) -> Result<(), ContextError> {
         match self.context {
             Context::Wgl(ref c) => c.swap_buffers(),
@@ -339,6 +357,7 @@ impl GlContext for Window {
         }
     }
 
+    #[inline]
     fn get_api(&self) -> Api {
         match self.context {
             Context::Wgl(ref c) => c.get_api(),
@@ -346,6 +365,7 @@ impl GlContext for Window {
         }
     }
 
+    #[inline]
     fn get_pixel_format(&self) -> PixelFormat {
         match self.context {
             Context::Wgl(ref c) => c.get_pixel_format(),
@@ -361,6 +381,7 @@ pub struct PollEventsIterator<'a> {
 impl<'a> Iterator for PollEventsIterator<'a> {
     type Item = Event;
 
+    #[inline]
     fn next(&mut self) -> Option<Event> {
         self.window.events_receiver.try_recv().ok()
     }
@@ -373,12 +394,14 @@ pub struct WaitEventsIterator<'a> {
 impl<'a> Iterator for WaitEventsIterator<'a> {
     type Item = Event;
 
+    #[inline]
     fn next(&mut self) -> Option<Event> {
         self.window.events_receiver.recv().ok()
     }
 }
 
 impl Drop for Window {
+    #[inline]
     fn drop(&mut self) {
         unsafe {
             // we don't call MakeCurrent(0, 0) because we are not sure that the context
