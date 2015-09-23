@@ -38,16 +38,16 @@ impl WindowProxy {
     }
 }
 
-pub struct MonitorID;
+pub struct MonitorId;
 
-pub fn get_available_monitors() -> VecDeque<MonitorID> {
+pub fn get_available_monitors() -> VecDeque<MonitorId> {
     VecDeque::new()
 }
-pub fn get_primary_monitor() -> MonitorID {
-    MonitorID
+pub fn get_primary_monitor() -> MonitorId {
+    MonitorId
 }
 
-impl MonitorID {
+impl MonitorId {
     pub fn get_name(&self) -> Option<String> {
         unimplemented!();
     }

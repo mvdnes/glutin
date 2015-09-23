@@ -61,8 +61,8 @@ impl<'a> WindowBuilder<'a> {
     /// Requests fullscreen mode.
     ///
     /// If you don't specify dimensions for the window, it will match the monitor's.
-    pub fn with_fullscreen(mut self, monitor: MonitorID) -> WindowBuilder<'a> {
-        let MonitorID(monitor) = monitor;
+    pub fn with_fullscreen(mut self, monitor: MonitorId) -> WindowBuilder<'a> {
+        let MonitorId(monitor) = monitor;
         self.window.monitor = Some(monitor);
         self
     }
@@ -572,14 +572,14 @@ impl<'a> Iterator for WaitEventsIterator<'a> {
 // Implementation note: we retreive the list once, then serve each element by one by one.
 // This may change in the future.
 pub struct AvailableMonitorsIter {
-    data: VecDequeIter<platform::MonitorID>,
+    data: VecDequeIter<platform::MonitorId>,
 }
 
 impl Iterator for AvailableMonitorsIter {
-    type Item = MonitorID;
+    type Item = MonitorId;
 
-    fn next(&mut self) -> Option<MonitorID> {
-        self.data.next().map(|id| MonitorID(id))
+    fn next(&mut self) -> Option<MonitorId> {
+        self.data.next().map(|id| MonitorId(id))
     }
 
     fn size_hint(&self) -> (usize, Option<usize>) {
@@ -594,29 +594,29 @@ pub fn get_available_monitors() -> AvailableMonitorsIter {
 }
 
 /// Returns the primary monitor of the system.
-pub fn get_primary_monitor() -> MonitorID {
-    MonitorID(platform::get_primary_monitor())
+pub fn get_primary_monitor() -> MonitorId {
+    MonitorId(platform::get_primary_monitor())
 }
 
 /// Identifier for a monitor.
-pub struct MonitorID(platform::MonitorID);
+pub struct MonitorId(platform::MonitorId);
 
-impl MonitorID {
+impl MonitorId {
     /// Returns a human-readable name of the monitor.
     pub fn get_name(&self) -> Option<String> {
-        let &MonitorID(ref id) = self;
+        let &MonitorId(ref id) = self;
         id.get_name()
     }
 
     /// Returns the native platform identifier for this monitor.
     pub fn get_native_identifier(&self) -> NativeMonitorId {
-        let &MonitorID(ref id) = self;
+        let &MonitorId(ref id) = self;
         id.get_native_identifier()
     }
 
     /// Returns the number of pixels currently displayed on the monitor.
     pub fn get_dimensions(&self) -> (u32, u32) {
-        let &MonitorID(ref id) = self;
+        let &MonitorId(ref id) = self;
         id.get_dimensions()
     }
 }
